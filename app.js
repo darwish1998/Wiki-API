@@ -15,13 +15,46 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/wikiDB"{useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/wikiDB", {useNewUrlParser: true},{useUnifiedTopology: true});
 
-const articalSchema {
+const articleSchema =  {
   title: String,
   content: String
 };
-const Artical = mongoose.model("Artical",articalSchema);
+const Article = mongoose.model("Article",articleSchema);
+
+app.get("/articles",function(req,res){
+
+Article.find(function(err, foundArticles){
+    if(!err) {
+        res.send(foundArticles);
+    }
+    else{
+      res.send(err);
+    }
+});
+});
+
+app.post("/articles", function(req, res) {
+  console.log();
+  console.log();
+
+
+  const newArticle = new Article({
+    title:req.body.title,
+    title:req.body.content
+  });
+  newArticle.save(function(err){
+    if (!err){
+      res.send("Successfully added a new article");
+
+    }else{
+      res.send(err);
+    }
+  });
+});
+
+
 
 
 app.listen(3000, function() {
